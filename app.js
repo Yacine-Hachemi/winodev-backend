@@ -11,15 +11,20 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Configuration du transporteur Nodemailer pour Zoho
+const corsOptions = {
+  origin: ["https://winodev.com", "http://localhost:3000"], 
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
+
 const transporter = nodemailer.createTransport({
-  host: "smtp.zoho.com",
+  host: 'smtp.hostinger.com',
   port: 465,
-  secure: true,
+  secure: true, // SSL
   auth: {
-    user: process.env.EMAIL_USER ,
-    pass: process.env.EMAIL_PASS ,
-  },
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
 });
 
 // Route pour envoyer des emails
@@ -29,7 +34,7 @@ app.post("/send", async (req, res) => {
   try {
     // Envoyer l'email
     await transporter.sendMail({
-      from: `"Winodev Contact" <contact@winodev.com>`, 
+      from: '"Winodev Contact" <contact@winodev.com>', 
       replyTo: email, 
       to: "contact@winodev.com", 
       subject: `Nouveau message: ${subject}`,
